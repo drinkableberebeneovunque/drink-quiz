@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Drink Magico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f6d5f7 0%, #fbe9d7 100%);
+            font-family: 'Quicksand', sans-serif;
+            color: #334155;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        #quiz-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .main-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(147,51,234,0.05), rgba(236,72,153,0.05));
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .question-title {
+            font-family: 'Abril Fatface', serif;
+            font-size: 2.8rem;
+            background: linear-gradient(45deg, #334155, #0ea5e9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .question-subtext {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.4rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        #options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .option-button {
+            height: 130px;
+            width: 100%;
+            border: none;
+            border-radius: 20px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .option-button:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .option-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+            background: linear-gradient(
+                90deg,
+                rgba(0,0,0,0.7) 0%,
+                rgba(0,0,0,0.4) 50%,
+                rgba(0,0,0,0.2) 100%
+            );
+        }
+
+        .option-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            max-width: 60%;
+            text-align: left;
+        }
+
+        .option-subtext {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.9);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            text-align: right;
+            max-width: 35%;
+        }
+
+        #progress {
+            text-align: center;
+            margin-top: 2rem;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        #result-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #f6d5f7 0%, #fbe9d7 100%);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .result-image {
+            width: 1080px;
+            max-width: 90vw;
+            height: calc(1080px * 1.778);
+            max-height: 80vh;
+            object-fit: contain;
+            margin: 2rem 0;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .restart-button {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(to right, #9333ea, #ec4899);
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1001;
+        }
+
+        .restart-button:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 768px) {
+            #quiz-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+
+            .question-title {
+                font-size: 2rem;
+            }
+
+            .question-subtext {
+                font-size: 1.1rem;
+            }
+
+            .option-button {
+                height: 100px;
+            }
+
+            .option-text {
+                font-size: 1.2rem;
+            }
+
+            .option-subtext {
+                font-size: 0.9rem;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <div id="question-container">
+            <div class="main-header">
+                <h1 class="question-title">Scopri quale drink magico fa per te!</h1>
+                <p class="question-subtext">Rispondi alle domande e trova il tuo drink ideale</p>
+            </div>
+            <div id="options-container"></div>
+            <div id="progress"></div>
+        </div>
+    </div>
+    <div id="result-container"></div>
+    <script src="script.js"></script>
+</body>
+</html>
